@@ -144,13 +144,14 @@ export default function OMIGPortal() {
   const [portfolioTab, setPortfolioTab] = useState(0);
   const [imaSection, setImaSection] = useState(3);
   const [configTab, setConfigTab] = useState(0);
+  const [showCS, setShowCS] = useState(false);
 
   const cr = ROLES.find(r=>r.id===role);
   const ob = OBS.find(o=>o.id===selOB);
   const myTasks = ROLE_TASKS[role]||[];
   const myPhases = ROLE_PHASES[role]||[1,2,3,4,5];
   const tt = (msg,type='success')=>setToast({msg,type});
-  const nav = useCallback((s,o)=>{setScr(s);if(o)setSelOB(o);setShowND(false);setShowRP(false)},[]);
+  const nav = useCallback((s,o)=>{setScr(s);if(o)setSelOB(o);setShowND(false);setShowRP(false);setShowCS(false)},[]);
 
   if(scr==='LOGIN') return (
     <div style={{width:'100vw',height:'100vh',background:C.bg,display:'flex',alignItems:'center',justifyContent:'center',backgroundImage:'repeating-linear-gradient(0deg,transparent,transparent 49px,rgba(255,255,255,.02) 49px,rgba(255,255,255,.02) 50px),repeating-linear-gradient(90deg,transparent,transparent 49px,rgba(255,255,255,.02) 49px,rgba(255,255,255,.02) 50px)'}}>
@@ -352,7 +353,19 @@ export default function OMIGPortal() {
       </div>
       <div style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden'}}>
         <div style={{padding:'12px 24px',borderBottom:`1px solid ${C.bd}`,display:'flex',alignItems:'center',gap:16,background:C.sf,flexShrink:0}}>
-          <div style={{width:200}}><div style={{display:'flex',justifyContent:'space-between',fontSize:10,color:C.t2,marginBottom:4}}><span>{ob?.clientName}</span><span style={{fontFamily:"'Courier New',monospace"}}>{ob?.progress}%</span></div><PBar pct={ob?.progress||0} h={4}/></div>
+          <div style={{width:240,position:'relative'}}>
+            <div onClick={()=>{setShowCS(!showCS);setShowND(false);setShowRP(false)}} style={{cursor:'pointer',padding:'6px 10px',background:C.el,borderRadius:8,border:`1px solid ${showCS?C.ac:C.bd}`}}>
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',fontSize:11,color:C.tx,marginBottom:4}}><span style={{fontWeight:500}}>{ob?.clientName}</span><span style={{color:C.t2,fontSize:10}}>▼</span></div>
+              <div style={{display:'flex',alignItems:'center',gap:8}}><div style={{flex:1}}><PBar pct={ob?.progress||0} h={4}/></div><span style={{fontSize:10,color:C.t2,fontFamily:"'Courier New',monospace"}}>{ob?.progress}%</span></div>
+            </div>
+            {showCS&&<div style={{position:'absolute',left:0,top:'100%',width:320,marginTop:4,background:C.el,border:`1px solid ${C.bd}`,borderRadius:10,zIndex:99,maxHeight:360,overflow:'auto',boxShadow:'0 8px 32px rgba(0,0,0,.4)'}}>
+              <div style={{padding:'10px 14px',borderBottom:`1px solid ${C.bd}`,fontSize:11,color:C.t2,fontWeight:600,textTransform:'uppercase',letterSpacing:1}}>Switch Client</div>
+              {OBS.map(o=><div key={o.id} onClick={()=>{setSelOB(o.id);setShowCS(false)}} style={{padding:'10px 14px',cursor:'pointer',borderBottom:`1px solid ${C.bd}`,background:o.id===selOB?'rgba(59,130,246,.12)':'transparent'}} onMouseOver={e=>{if(o.id!==selOB)e.currentTarget.style.background='rgba(255,255,255,.04)'}} onMouseOut={e=>{if(o.id!==selOB)e.currentTarget.style.background='transparent'}}>
+                <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:4}}><span style={{fontSize:12,color:C.tx,fontWeight:o.id===selOB?600:400}}>{o.clientName}</span><Badge s={o.status}/></div>
+                <div style={{display:'flex',alignItems:'center',gap:8}}><div style={{flex:1}}><PBar pct={o.progress} h={3}/></div><span style={{fontSize:10,color:C.t2,fontFamily:"'Courier New',monospace"}}>{o.progress}%</span></div>
+              </div>)}
+            </div>}
+          </div>
           <div style={{flex:1}}/>
           <input placeholder="Search clients, tasks..." style={{width:260,padding:'8px 14px',background:C.el,border:`1px solid ${C.bd}`,borderRadius:6,color:C.tx,fontSize:12}}/>
           <div style={{position:'relative'}}><button onClick={()=>setShowND(!showND)} style={{background:'none',border:'none',cursor:'pointer',fontSize:16,position:'relative',padding:4}}>🔔<span style={{position:'absolute',top:-2,right:-4,background:C.no,color:'#fff',fontSize:9,fontWeight:700,padding:'1px 4px',borderRadius:10}}>3</span></button>
