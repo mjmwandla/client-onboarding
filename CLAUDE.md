@@ -20,16 +20,39 @@ omig-portal/
 │   └── favicon.svg
 └── src/
     ├── main.jsx        # React root mount
-    └── App.jsx         # ENTIRE app — single file, all 28 screens
+    ├── App.jsx         # Shell: layout, sidebar, header, state, screen routing
+    ├── constants/
+    │   ├── index.js    # Re-exports all constants
+    │   ├── colors.js   # C (palette) + CSS (global styles)
+    │   ├── roles.js    # ROLES, ROLE_TASKS, ROLE_PHASES
+    │   └── mockData.js # OBS, NOTIFS, PHASES, FICA_DOCS_INIT, AUDIT, MANDATES
+    ├── components/
+    │   ├── index.js    # Re-exports all components
+    │   ├── Badge.jsx   # Status badge with pulsing dot
+    │   ├── PBar.jsx    # Progress bar
+    │   ├── Toast.jsx   # Auto-dismiss notification
+    │   ├── KPI.jsx     # KPI card with trend
+    │   ├── Cd.jsx      # Card container
+    │   ├── Hdr.jsx     # Section header
+    │   ├── Btn.jsx     # Button (primary/danger/outline)
+    │   ├── Fld.jsx     # Form field (input/select/textarea)
+    │   ├── SL.jsx      # Section label
+    │   └── Table.jsx   # TH + TD table cells
+    └── screens/        # One file per screen (28 screens)
+        ├── Login.jsx
+        ├── Dashboard.jsx
+        ├── AllOnboardings.jsx
+        ├── ... (25 more)
+        └── ProcessConfig.jsx
 ```
 
 ## Architecture
-The app is a single-file React component (`App.jsx`) with:
-- All state lifted to the top-level `OMIGPortal` component
-- Screen renderers in a `S` object (keyed by screen name)
-- Navigation via `setScr(screenKey)` — no router
+- All state lifted to `App.jsx` (`OMIGPortal` component)
+- Each screen is a separate file in `screens/` receiving state via props
+- Navigation via `nav(screenKey)` — no router
 - 12 user roles with role-based filtering of nav and tasks
 - 6 mock onboardings with realistic South African institutional client data
+- Constants and components are in their own directories with barrel exports
 
 ## Key Constants
 - `C` — colour palette object

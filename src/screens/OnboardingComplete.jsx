@@ -1,0 +1,8 @@
+import { C } from '../constants/colors';
+import { OBS } from '../constants';
+import { Cd, Btn } from '../components';
+
+export function OnboardingComplete({ nav }) {
+  const co = OBS.find(o=>o.status==='COMPLETE')||OBS[3];
+  return <div style={{display:'flex',alignItems:'center',justifyContent:'center',minHeight:'70vh'}}><div style={{textAlign:'center',maxWidth:560}}><div style={{width:80,height:80,borderRadius:'50%',background:'rgba(16,185,129,.15)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 24px',border:`2px solid ${C.ok}44`}}><span style={{fontSize:36}}>✅</span></div><div style={{fontFamily:"system-ui,sans-serif",fontSize:28,color:C.ok,marginBottom:8}}>ONBOARDING COMPLETE</div><div style={{fontSize:16,color:C.tx}}>{co.clientName}</div><div style={{fontSize:13,color:C.t2,fontFamily:"'Courier New',monospace",marginBottom:32}}>{co.id}</div><Cd style={{padding:24,textAlign:'left',marginBottom:24}}><div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>{[['Started',co.startDate],['Completed',co.completedDate],['Duration',`${co.daysActive} days`],['Tasks','55/55'],['FICA','✅ PASSED'],['IMA','v3.0 signed'],['AUM',co.aum],['Portfolio','SEG-2024-0031']].map(([k,v])=><div key={k} style={{padding:'10px 14px',background:C.el,borderRadius:6}}><div style={{fontSize:10,color:C.t2,textTransform:'uppercase',letterSpacing:1}}>{k}</div><div style={{fontSize:13,color:C.tx,fontWeight:500,marginTop:4}}>{v}</div></div>)}</div></Cd><div style={{display:'flex',gap:12,justifyContent:'center'}}><Btn onClick={()=>nav('AUDIT_TRAIL')}>Audit Trail</Btn><Btn>Case File</Btn><Btn primary onClick={()=>nav('NEW_ONBOARDING')}>New Onboarding</Btn></div></div></div>;
+}
