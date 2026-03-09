@@ -1,9 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import OMIGPortal from './App.jsx'
+import { ThemeProvider } from './context/ThemeContext'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <OMIGPortal />
+    <ThemeProvider>
+      <OMIGPortal />
+    </ThemeProvider>
   </React.StrictMode>
 )

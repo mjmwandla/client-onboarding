@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
-import { C, CSS } from "./constants/colors";
+import { C, getCSS } from "./constants/colors";
+import { useTheme } from "./context/ThemeContext";
 import { ROLES, ROLE_TASKS, ROLE_PHASES } from "./constants/roles";
 import { OBS, NOTIFS, PHASES, FICA_DOCS_INIT } from "./constants/mockData";
 import { Badge, PBar, Toast } from "./components";
@@ -60,6 +61,7 @@ export default function OMIGPortal() {
   const [imaSection, setImaSection] = useState(3);
   const [configTab, setConfigTab] = useState(0);
   const [showCS, setShowCS] = useState(false);
+  const { mode, toggle } = useTheme();
 
   const cr = ROLES.find(r=>r.id===role);
   const ob = OBS.find(o=>o.id===selOB);
@@ -125,24 +127,24 @@ export default function OMIGPortal() {
   };
 
   return (
-    <div style={{display:'flex',width:'100vw',height:'100vh',background:C.bg,overflow:'hidden',backgroundImage:'repeating-linear-gradient(0deg,transparent,transparent 49px,rgba(255,255,255,.015) 49px,rgba(255,255,255,.015) 50px),repeating-linear-gradient(90deg,transparent,transparent 49px,rgba(255,255,255,.015) 49px,rgba(255,255,255,.015) 50px)'}}>
-      <style>{CSS}</style>
+    <div style={{display:'flex',width:'100vw',height:'100vh',background:C.bg,overflow:'hidden',backgroundImage:'repeating-linear-gradient(0deg,transparent,transparent 49px,'+C.grid+' 49px,'+C.grid+' 50px),repeating-linear-gradient(90deg,transparent,transparent 49px,'+C.grid+' 49px,'+C.grid+' 50px)'}}>
+      <style>{getCSS()}</style>
       <div style={{width:248,background:C.sf,borderRight:`1px solid ${C.bd}`,display:'flex',flexDirection:'column',flexShrink:0,overflow:'hidden'}}>
-        <div style={{padding:'20px 20px 16px',borderBottom:`1px solid ${C.bd}`}}><div style={{fontFamily:"system-ui,sans-serif",fontSize:22,fontWeight:700,color:C.tx,letterSpacing:2}}>OMIG</div><div style={{fontSize:10,color:C.t2,textTransform:'uppercase',letterSpacing:2,marginTop:2}}>Onboarding Portal</div></div>
+        <div style={{padding:'20px 20px 16px',borderBottom:`1px solid ${C.bd}`}}><div style={{fontFamily:"'Cormorant Garamond',Garamond,serif",fontSize:22,fontWeight:700,color:C.ab,letterSpacing:2}}>OMIG</div><div style={{fontSize:10,color:C.t2,textTransform:'uppercase',letterSpacing:2,marginTop:2}}>Onboarding Portal</div></div>
         <div style={{padding:'12px 16px',borderBottom:`1px solid ${C.bd}`,position:'relative'}}>
-          <div onClick={()=>setShowRP(!showRP)} style={{display:'flex',alignItems:'center',gap:10,cursor:'pointer',padding:'8px 10px',background:C.el,borderRadius:8}}>
+          <div onClick={()=>setShowRP(!showRP)} style={{display:'flex',alignItems:'center',gap:10,cursor:'pointer',padding:'8px 10px',background:C.el,borderRadius:3}}>
             <div style={{width:32,height:32,borderRadius:'50%',background:C.ac,display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:700,color:'#fff'}}>{cr?.initials}</div>
             <div style={{flex:1,minWidth:0}}><div style={{fontSize:12,color:C.tx,fontWeight:500,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{cr?.name}</div><div style={{fontSize:10,color:C.t2,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{cr?.title}</div></div>
             <span style={{color:C.t2,fontSize:10}}>▼</span>
           </div>
-          {showRP&&<div style={{position:'absolute',left:16,right:16,top:'100%',background:C.el,border:`1px solid ${C.bd}`,borderRadius:8,zIndex:99,maxHeight:300,overflow:'auto',boxShadow:'0 8px 32px rgba(0,0,0,.4)'}}>
-            {ROLES.map(r=><div key={r.id} onClick={()=>{setRole(r.id);setShowRP(false);setScr('DASHBOARD')}} style={{padding:'10px 14px',cursor:'pointer',borderBottom:`1px solid ${C.bd}`,background:r.id===role?'#1E3A5F':'transparent'}} onMouseOver={e=>{if(r.id!==role)e.currentTarget.style.background=C.sf}} onMouseOut={e=>{if(r.id!==role)e.currentTarget.style.background='transparent'}}><div style={{fontSize:12,color:C.tx,fontWeight:500}}>{r.name}</div><div style={{fontSize:10,color:C.t2}}>{r.title}</div></div>)}
+          {showRP&&<div style={{position:'absolute',left:16,right:16,top:'100%',background:C.el,border:`1px solid ${C.bd}`,borderRadius:3,zIndex:99,maxHeight:300,overflow:'auto',boxShadow:'0 8px 32px rgba(0,0,0,.4)'}}>
+            {ROLES.map(r=><div key={r.id} onClick={()=>{setRole(r.id);setShowRP(false);setScr('DASHBOARD')}} style={{padding:'10px 14px',cursor:'pointer',borderBottom:`1px solid ${C.bd}`,background:r.id===role?C.ad:'transparent'}} onMouseOver={e=>{if(r.id!==role)e.currentTarget.style.background=C.sf}} onMouseOut={e=>{if(r.id!==role)e.currentTarget.style.background='transparent'}}><div style={{fontSize:12,color:C.tx,fontWeight:500}}>{r.name}</div><div style={{fontSize:10,color:C.t2}}>{r.title}</div></div>)}
           </div>}
         </div>
         <div style={{flex:1,overflow:'auto',padding:'8px 0'}}>
           {navG.map(g=><div key={g.label} style={{marginBottom:4}}>
             <div style={{padding:'10px 20px 4px',fontSize:9,color:C.t2,textTransform:'uppercase',letterSpacing:1.5,fontWeight:600}}>{g.label}</div>
-            {g.items.map(it=><div key={it.k} onClick={()=>nav(it.k)} style={{padding:'8px 20px',cursor:'pointer',display:'flex',alignItems:'center',gap:10,borderLeft:scr===it.k?`2px solid ${C.ac}`:'2px solid transparent',background:scr===it.k?'rgba(59,130,246,.08)':'transparent'}} onMouseOver={e=>{if(scr!==it.k)e.currentTarget.style.background='rgba(255,255,255,.03)'}} onMouseOut={e=>{if(scr!==it.k)e.currentTarget.style.background='transparent'}}><span style={{fontSize:12,width:18,textAlign:'center',color:scr===it.k?C.ac:C.t2}}>{it.i}</span><span style={{fontSize:12,color:scr===it.k?C.ac:C.t2,fontWeight:scr===it.k?600:400}}>{it.l}</span>{it.badge>0&&<span style={{marginLeft:'auto',background:C.no,color:'#fff',fontSize:10,fontWeight:600,padding:'1px 6px',borderRadius:10}}>{it.badge}</span>}</div>)}
+            {g.items.map(it=><div key={it.k} onClick={()=>nav(it.k)} style={{padding:'8px 20px',cursor:'pointer',display:'flex',alignItems:'center',gap:10,borderLeft:scr===it.k?`2px solid ${C.ac}`:'2px solid transparent',background:scr===it.k?C.ad:'transparent'}} onMouseOver={e=>{if(scr!==it.k)e.currentTarget.style.background=C.hover}} onMouseOut={e=>{if(scr!==it.k)e.currentTarget.style.background='transparent'}}><span style={{fontSize:12,width:18,textAlign:'center',color:scr===it.k?C.ac:C.t2}}>{it.i}</span><span style={{fontSize:12,color:scr===it.k?C.ac:C.t2,fontWeight:scr===it.k?600:400}}>{it.l}</span>{it.badge>0&&<span style={{marginLeft:'auto',background:C.no,color:'#fff',fontSize:10,fontWeight:600,padding:'1px 6px',borderRadius:10}}>{it.badge}</span>}</div>)}
           </div>)}
         </div>
         <div style={{padding:'12px 16px',borderTop:`1px solid ${C.bd}`}}><button onClick={()=>setScr('LOGIN')} style={{background:'none',border:'none',color:C.t2,fontSize:11,cursor:'pointer'}}>Sign Out</button></div>
@@ -150,23 +152,24 @@ export default function OMIGPortal() {
       <div style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden'}}>
         <div style={{padding:'12px 24px',borderBottom:`1px solid ${C.bd}`,display:'flex',alignItems:'center',gap:16,background:C.sf,flexShrink:0}}>
           <div style={{width:240,position:'relative'}}>
-            <div onClick={()=>{setShowCS(!showCS);setShowND(false);setShowRP(false)}} style={{cursor:'pointer',padding:'6px 10px',background:C.el,borderRadius:8,border:`1px solid ${showCS?C.ac:C.bd}`}}>
+            <div onClick={()=>{setShowCS(!showCS);setShowND(false);setShowRP(false)}} style={{cursor:'pointer',padding:'6px 10px',background:C.el,borderRadius:3,border:`1px solid ${showCS?C.ac:C.bd}`}}>
               <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',fontSize:11,color:C.tx,marginBottom:4}}><span style={{fontWeight:500}}>{ob?.clientName}</span><span style={{color:C.t2,fontSize:10}}>▼</span></div>
-              <div style={{display:'flex',alignItems:'center',gap:8}}><div style={{flex:1}}><PBar pct={ob?.progress||0} h={4}/></div><span style={{fontSize:10,color:C.t2,fontFamily:"'Courier New',monospace"}}>{ob?.progress}%</span></div>
+              <div style={{display:'flex',alignItems:'center',gap:8}}><div style={{flex:1}}><PBar pct={ob?.progress||0} h={4}/></div><span style={{fontSize:10,color:C.t2,fontFamily:"'Source Code Pro','Fira Code',monospace"}}>{ob?.progress}%</span></div>
             </div>
-            {showCS&&<div style={{position:'absolute',left:0,top:'100%',width:320,marginTop:4,background:C.el,border:`1px solid ${C.bd}`,borderRadius:10,zIndex:99,maxHeight:360,overflow:'auto',boxShadow:'0 8px 32px rgba(0,0,0,.4)'}}>
+            {showCS&&<div style={{position:'absolute',left:0,top:'100%',width:320,marginTop:4,background:C.el,border:`1px solid ${C.bd}`,borderRadius:3,zIndex:99,maxHeight:360,overflow:'auto',boxShadow:'0 8px 32px rgba(0,0,0,.4)'}}>
               <div style={{padding:'10px 14px',borderBottom:`1px solid ${C.bd}`,fontSize:11,color:C.t2,fontWeight:600,textTransform:'uppercase',letterSpacing:1}}>Switch Client</div>
-              {OBS.map(o=><div key={o.id} onClick={()=>{setSelOB(o.id);setShowCS(false)}} style={{padding:'10px 14px',cursor:'pointer',borderBottom:`1px solid ${C.bd}`,background:o.id===selOB?'rgba(59,130,246,.12)':'transparent'}} onMouseOver={e=>{if(o.id!==selOB)e.currentTarget.style.background='rgba(255,255,255,.04)'}} onMouseOut={e=>{if(o.id!==selOB)e.currentTarget.style.background='transparent'}}>
+              {OBS.map(o=><div key={o.id} onClick={()=>{setSelOB(o.id);setShowCS(false)}} style={{padding:'10px 14px',cursor:'pointer',borderBottom:`1px solid ${C.bd}`,background:o.id===selOB?C.ad:'transparent'}} onMouseOver={e=>{if(o.id!==selOB)e.currentTarget.style.background=C.hover}} onMouseOut={e=>{if(o.id!==selOB)e.currentTarget.style.background='transparent'}}>
                 <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:4}}><span style={{fontSize:12,color:C.tx,fontWeight:o.id===selOB?600:400}}>{o.clientName}</span><Badge s={o.status}/></div>
-                <div style={{display:'flex',alignItems:'center',gap:8}}><div style={{flex:1}}><PBar pct={o.progress} h={3}/></div><span style={{fontSize:10,color:C.t2,fontFamily:"'Courier New',monospace"}}>{o.progress}%</span></div>
+                <div style={{display:'flex',alignItems:'center',gap:8}}><div style={{flex:1}}><PBar pct={o.progress} h={3}/></div><span style={{fontSize:10,color:C.t2,fontFamily:"'Source Code Pro','Fira Code',monospace"}}>{o.progress}%</span></div>
               </div>)}
             </div>}
           </div>
           <div style={{flex:1}}/>
-          <input placeholder="Search clients, tasks..." style={{width:260,padding:'8px 14px',background:C.el,border:`1px solid ${C.bd}`,borderRadius:6,color:C.tx,fontSize:12}}/>
+          <input placeholder="Search clients, tasks..." style={{width:260,padding:'8px 14px',background:C.el,border:`1px solid ${C.bd}`,borderRadius:2,color:C.tx,fontSize:12}}/>
           <div style={{position:'relative'}}><button onClick={()=>setShowND(!showND)} style={{background:'none',border:'none',cursor:'pointer',fontSize:16,position:'relative',padding:4}}>🔔<span style={{position:'absolute',top:-2,right:-4,background:C.no,color:'#fff',fontSize:9,fontWeight:700,padding:'1px 4px',borderRadius:10}}>3</span></button>
-            {showND&&<div style={{position:'absolute',right:0,top:'100%',width:340,background:C.el,border:`1px solid ${C.bd}`,borderRadius:10,zIndex:99,maxHeight:400,overflow:'auto',boxShadow:'0 8px 32px rgba(0,0,0,.4)',marginTop:8}}><div style={{padding:'12px 16px',borderBottom:`1px solid ${C.bd}`,display:'flex',justifyContent:'space-between'}}><span style={{fontSize:13,fontWeight:600,color:C.tx}}>Notifications</span><button onClick={()=>nav('NOTIFICATIONS')} style={{background:'none',border:'none',color:C.ac,fontSize:12,cursor:'pointer'}}>All</button></div>{NOTIFS.slice(0,4).map(n=><div key={n.id} style={{padding:'10px 16px',borderBottom:`1px solid ${C.bd}`,fontSize:12}}><div style={{color:C.tx}}>{n.text}</div><div style={{color:C.t2,fontSize:11,marginTop:2}}>{n.client} · {n.time}</div></div>)}</div>}
+            {showND&&<div style={{position:'absolute',right:0,top:'100%',width:340,background:C.el,border:`1px solid ${C.bd}`,borderRadius:3,zIndex:99,maxHeight:400,overflow:'auto',boxShadow:'0 8px 32px rgba(0,0,0,.4)',marginTop:8}}><div style={{padding:'12px 16px',borderBottom:`1px solid ${C.bd}`,display:'flex',justifyContent:'space-between'}}><span style={{fontSize:13,fontWeight:600,color:C.tx}}>Notifications</span><button onClick={()=>nav('NOTIFICATIONS')} style={{background:'none',border:'none',color:C.ac,fontSize:12,cursor:'pointer'}}>All</button></div>{NOTIFS.slice(0,4).map(n=><div key={n.id} style={{padding:'10px 16px',borderBottom:`1px solid ${C.bd}`,fontSize:12}}><div style={{color:C.tx}}>{n.text}</div><div style={{color:C.t2,fontSize:11,marginTop:2}}>{n.client} · {n.time}</div></div>)}</div>}
           </div>
+          <button onClick={toggle} style={{background:'none',border:`1px solid ${C.bd}`,borderRadius:3,padding:'4px 10px',cursor:'pointer',fontSize:13,color:C.t2,display:'flex',alignItems:'center',gap:6}} title={mode==='dark'?'Switch to light':'Switch to dark'}>{mode==='dark'?'\u2600':'\u263E'}<span style={{fontSize:11}}>{mode==='dark'?'Light':'Dark'}</span></button>
           <span style={{fontSize:12,color:C.t2}}>5 March 2026</span>
         </div>
         <div style={{padding:'8px 24px',fontSize:11,color:C.t2,borderBottom:`1px solid ${C.bd}`,background:C.bg}}><span style={{cursor:'pointer',color:C.ac}} onClick={()=>nav('DASHBOARD')}>Dashboard</span><span style={{margin:'0 8px'}}>›</span><span>{scr.replace(/_/g,' ').toLowerCase().replace(/\b\w/g,c=>c.toUpperCase())}</span></div>

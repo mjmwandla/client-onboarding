@@ -7,7 +7,7 @@ export const TH = ({ children }) => (
 );
 
 export const TD = ({ children, mono, accent, style: s }) => (
-  <td style={{ padding: '12px 16px', color: accent ? C.ac : C.tx, ...(mono && { fontFamily: "'Courier New',monospace", fontSize: 12 }), ...s }}>
+  <td style={{ padding: '12px 16px', color: accent ? C.ac : C.tx, ...(mono && { fontFamily: "'Source Code Pro','Fira Code',monospace", fontSize: 12 }), ...s }}>
     {children}
   </td>
 );
